@@ -9,6 +9,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
+
 import {
   getFirestore,
   doc,
@@ -16,15 +17,18 @@ import {
   setDoc,
   collection,
   writeBatch,
+  query,
+  getDocs,
+
 } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDDU4V-_QV3M8GyhC9SVieRTDM4dbiT0Yk',
-  authDomain: 'crwn-clothing-db-98d4d.firebaseapp.com',
-  projectId: 'crwn-clothing-db-98d4d',
-  storageBucket: 'crwn-clothing-db-98d4d.appspot.com',
-  messagingSenderId: '626766232035',
-  appId: '1:626766232035:web:506621582dab103a4d08d6',
+  apiKey: "AIzaSyD-qyLkQuH4h9QaG2trxdOeawQHBSHdlNI",
+  authDomain: "projectcrown2.firebaseapp.com",
+  projectId: "projectcrown2",
+  storageBucket: "projectcrown2.appspot.com",
+  messagingSenderId: "89477634722",
+  appId: "1:89477634722:web:9ea17554efc168299c95fb"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -35,14 +39,21 @@ googleProvider.setCustomParameters({
   prompt: 'select_account',
 });
 
+//INITIATE FIREBASE AUTHERIZATION
 export const auth = getAuth();
+console.log("AUTH: ", auth);
+
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
+
 export const signInWithGoogleRedirect = () =>
   signInWithRedirect(auth, googleProvider);
 
+//INITIATE DATABASE
 export const db = getFirestore();
+console.log("DB: ", db);
 
+//ADDING shop-data.js TO FIRESTORE DB
 export const addCollectionAndDocuments = async (
   collectionKey,
   objectsToAdd
@@ -59,6 +70,25 @@ export const addCollectionAndDocuments = async (
   console.log('done');
 };
 
+//GET A COLLECTION FROM DATABASE
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, "collections"); /////////////////////////
+  const q = query(collectionRef);
+
+  const querySnapshot = await getDocs(q);
+  //console.log(querySnapshot);
+  const queryDoc = querySnapshot.doc
+  const categoryMap = queryDoc.reduce((acc, docSnapshot) => {
+    const { title, items } = docSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {});
+
+  return categoryMap;
+}
+
+
+//CREATE USER DOCUMENT IN DATABASE
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
