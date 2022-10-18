@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import { CartContext } from '../../contexts/cart.context';
-
+import PaymentForm from '../payment-form/payment-form.component';
 import {
   CheckoutItemContainer,
   ImageContainer,

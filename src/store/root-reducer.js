@@ -1,0 +1,2 @@
+import { combinedReducers } from 'redux';
+

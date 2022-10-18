@@ -1,0 +1,1 @@
+Export PATH=/Users/shaunroecker/.npm-global/lib:$PATH
